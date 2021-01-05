@@ -31,7 +31,7 @@ def getTransactions(year):
     for transaction in root.iter('transaction'):
         # For all add/drop or trade transactions
         transaction_type = transaction.find('type').text
-        if transaction_type != 'add/drop' and transaction_type != 'commish':
+        if transaction_type != 'commish':
             # Get the transaction date
             transaction_timestamp = transaction.find('timestamp').text
             transaction_date = datetime.datetime.fromtimestamp(int(transaction_timestamp))
@@ -59,7 +59,7 @@ def getTransactions(year):
                 transactions_list.append(p_transaction)
     return transactions_list
 
-transactions_list = getTransactions('2020')
-for transaction in transactions_list:
-    print(transaction)
+#transactions_list = getTransactions('2020')
+#for transaction in transactions_list:
+#    print(transaction)
 
