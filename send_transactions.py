@@ -26,6 +26,6 @@ for transaction in transactions_list:
         print(transaction)
 
 # Store the current last transaction date
-curr_date = datetime.timestamp(transactions_list[-1]['date'])
+curr_date = datetime.timestamp(list(reversed(transactions_list))[-1]['date'])
 with open('last_transaction_date.txt', 'w') as last_trans:
     print(curr_date, file=last_trans)
