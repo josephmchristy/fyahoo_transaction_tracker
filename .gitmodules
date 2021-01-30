@@ -1,0 +1,3 @@
+[submodule "fyahoo_query"]
+	path = fyahoo_query
+	url = https://github.com/josephmchristy/fyahoo_query
