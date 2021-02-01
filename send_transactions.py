@@ -29,7 +29,7 @@ def create_transactions_list(transactions):
     for transaction in transactions:
         new_trans = {}
         new_trans['type'] = transaction['type']
-        if new_trans['type'] == 'commish':
+        if new_trans['type'] == 'commish' or new_trans['type'] == 'trade':
             break
         new_trans['date'] = transaction['timestamp']
         new_trans['players'] = []
@@ -107,3 +107,4 @@ def send_new_transactions(league_id, game_code, email_list):
 
 email_list = ['josephmchristy@gmail.com']
 send_new_transactions(30024, "nba", email_list)
+send_new_transactions(6851, "nhl", email_list)
