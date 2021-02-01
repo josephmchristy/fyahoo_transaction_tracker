@@ -45,15 +45,15 @@ def create_transactions_list(transactions):
 
 
 # Get the most recent stored transaction date
-def get_last_transaction_date():
+def get_last_transaction_date(filename):
     # If there is no previous transaction date stored, store it
-    if not os.path.isfile('last_transaction_date.txt'):
+    if not os.path.isfile(filename):
         prev_date = datetime.timestamp(transactions_list[-1]['date'])
-        with open('last_transaction_date.txt', 'w') as last_trans:
+        with open(filename, 'w') as last_trans:
             print(prev_date, file=last_trans)
 
     # Get the last transaction date
-    with open('last_transaction_date.txt', 'r') as last_trans:
+    with open(filename, 'r') as last_trans:
         prev_date = last_trans.readline().split(".",1)
         prev_date = int(prev_date[0])
         prev_date = datetime.fromtimestamp(prev_date)
@@ -61,7 +61,7 @@ def get_last_transaction_date():
 
 
 # Create a message from the most recent transactions
-def create_message(transaction_list, prev_date):
+def create_message(transactions_list, prev_date):
     transaction_msg = ''
     # Print transactions following last transaction date
     for transaction in transactions_list:
@@ -80,22 +80,29 @@ def create_message(transaction_list, prev_date):
 
 
 # Send the transaction message to email addresses
-def send_transactions(transaction_msg):
+def send_transactions(filename, transaction_msg, email_list):
     # Send the new transactions, if there are any
     if transaction_msg != '':
-        to = "josephmchristy@gmail.com"
-        sender = "josephmchristy@gmail.com.com"
-        subject = "subject"
-        gmail.SendMessage(sender, to, subject, msgHtml=None, msgPlain=transaction_msg)
-        # Store the current last transaction date
-        curr_date = datetime.timestamp(list(reversed(transactions_list))[-1]['date'])
-        with open('last_transaction_date.txt', 'w') as last_trans:
-            print(curr_date, file=last_trans)
+        for email in email_list:
+            to = email
+            sender = "josephmchristy@gmail.com.com"
+            subject = "Transactions Update"
+            gmail.SendMessage(sender, to, subject, msgHtml=None, msgPlain=transaction_msg)
+            # Store the current last transaction date
+            curr_date = datetime.timestamp(list(reversed(transactions_list))[-1]['date'])
+            with open(filename, 'w') as last_trans:
+                print(curr_date, file=last_trans)
 
 
-nba = FYahooQuery(30024, 'nba')
-transactions = json.loads(nba.get_league_transactions())
-transactions_list = create_transactions_list(transactions)
-prev_date = get_last_transaction_date()
-transaction_msg = create_message(transactions_list, prev_date)
-print (transaction_msg)
+# Send any new transactions
+def send_new_transactions(league_id, game_code):
+    league = FYahooQuery(str(league_id), game_code)
+    transactions = json.loads(league.get_league_transactions())
+    transactions_list = create_transactions_list(transactions)
+    filename = 'last_transaction_date.txt'
+    prev_date = get_last_transaction_date(filename)
+    transaction_msg = create_message(transactions_list, prev_date)
+    print (transaction_msg)
+
+send_new_transactions(30024, "nba")
+send_new_transactions(6851, "nhl")
