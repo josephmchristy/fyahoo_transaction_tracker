@@ -98,7 +98,7 @@ def send_new_transactions(league_id, game_code, email_list):
     league = FYahooQuery(str(league_id), game_code)
     transactions = json.loads(league.get_league_transactions())
     transactions_list = create_transactions_list(transactions)
-    filename = str(league_id) + '_last_transaction_date.txt'
+    filename = os.path.join(sys.path[0], (str(league_id) + '_last_transaction_date.txt'))
     prev_date = get_last_transaction_date(filename, transactions_list)
     transaction_msg = create_message(transactions_list, prev_date)
     send_transactions(filename, transaction_msg, email_list)

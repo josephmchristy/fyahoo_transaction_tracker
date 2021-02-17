@@ -1,6 +1,7 @@
 #! python
 
 import httplib2
+import sys
 import os
 import oauth2client
 from oauth2client import client, tools, file
@@ -14,7 +15,7 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 
 SCOPES = 'https://www.googleapis.com/auth/gmail.send'
-CLIENT_SECRET_FILE = 'client_secret.json'
+CLIENT_SECRET_FILE = os.path.join(sys.path[0], 'client_secret.json')
 APPLICATION_NAME = 'Gmail API Python Send Email'
 
 def get_credentials():
